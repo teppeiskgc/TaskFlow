@@ -1,11 +1,16 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f5f7fb">
+
     <title>TaskFlow</title>
+
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
+
     <script src="script.js" defer></script>
 </head>
 
@@ -20,51 +25,77 @@
 
         <main>
 
-            
-<section class="task-input">
-    <input
-        type="text"
-        id="taskInput"
-        placeholder="新しいタスクを入力..."
-    >
+            <!-- タスク入力 -->
+            <section class="task-input">
 
-    <input
-        type="date"
-        id="taskDeadline"
-        aria-label="タスクの期限"
-    >
+                <input
+                    type="text"
+                    id="taskInput"
+                    placeholder="新しいタスクを入力..."
+                    aria-label="新しいタスク"
+                >
 
-    <button id="addButton">追加</button>
-</section>
+                <input
+                    type="date"
+                    id="taskDeadline"
+                    aria-label="タスクの期限（任意）"
+                >
 
+                <button id="addButton" type="button">
+                    追加
+                </button>
 
+            </section>
+
+            <!-- 進捗状況 -->
             <section class="progress">
+
                 <h2>今日の進捗</h2>
+
                 <p id="progressText">0 / 0 完了</p>
+
                 <div class="progress-bar">
                     <div id="progressFill"></div>
                 </div>
+
             </section>
 
-            <section>
-    <h2>タスク一覧</h2>
+            <!-- タスク一覧 -->
+            <section class="task-section">
 
-    <div class="filter-buttons">
-        <button class="filter-button active" data-filter="all">
-            すべて
-        </button>
+                <h2>タスク一覧</h2>
 
-        <button class="filter-button" data-filter="active">
-            未完了
-        </button>
+                <div class="filter-buttons">
 
-        <button class="filter-button" data-filter="completed">
-            完了済み
-        </button>
-    </div>
+                    <button
+                        class="filter-button active"
+                        data-filter="all"
+                        type="button"
+                    >
+                        すべて
+                    </button>
 
-    <ul id="taskList"></ul>
-</section>
+                    <button
+                        class="filter-button"
+                        data-filter="active"
+                        type="button"
+                    >
+                        未完了
+                    </button>
+
+                    <button
+                        class="filter-button"
+                        data-filter="completed"
+                        type="button"
+                    >
+                        完了済み
+                    </button>
+
+                </div>
+
+                <ul id="taskList"></ul>
+
+            </section>
 
         </main>
 
