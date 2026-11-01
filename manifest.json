@@ -1,0 +1,11 @@
+
+{
+    "name": "TaskFlow",
+    "short_name": "TaskFlow",
+    "description": "自分のタスクをシンプルに管理するアプリ",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#f4f6f9",
+    "theme_color": "#26354d",
+    "lang": "ja"
+}

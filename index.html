@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header>
+            <h1>TaskFlow</h1>
+            <p>自分のタスクを管理しよう。</p>
+        </header>
+
+        <main>
+
+            
+<section class="task-input">
+    <input
+        type="text"
+        id="taskInput"
+        placeholder="新しいタスクを入力..."
+    >
+
+    <input
+        type="date"
+        id="taskDeadline"
+        aria-label="タスクの期限"
+    >
+
+    <button id="addButton">追加</button>
+</section>
+
+
+            <section class="progress">
+                <h2>今日の進捗</h2>
+                <p id="progressText">0 / 0 完了</p>
+                <div class="progress-bar">
+                    <div id="progressFill"></div>
+                </div>
+            </section>
+
+            <section>
+    <h2>タスク一覧</h2>
+
+    <div class="filter-buttons">
+        <button class="filter-button active" data-filter="all">
+            すべて
+        </button>
+
+        <button class="filter-button" data-filter="active">
+            未完了
+        </button>
+
+        <button class="filter-button" data-filter="completed">
+            完了済み
+        </button>
+    </div>
+
+    <ul id="taskList"></ul>
+</section>
+
+        </main>
+
+    </div>
+
+</body>
+</html>

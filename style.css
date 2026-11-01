@@ -1,0 +1,285 @@
+/* ページ全体 */
+body {
+    background-color: #f4f6f9;
+    font-family: sans-serif;
+    margin: 0;
+    padding: 40px 20px;
+    color: #26354d;
+}
+
+/* メインコンテナ */
+.container {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* ヘッダー */
+header {
+    margin-bottom: 40px;
+}
+
+h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+header p {
+    color: #718096;
+    font-size: 16px;
+}
+
+/* 各セクション */
+main section {
+    background-color: #ffffff;
+    padding: 24px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* タスク入力欄 */
+.task-input {
+    display: flex;
+    gap: 10px;
+}
+
+input {
+    flex: 1;
+    padding: 13px;
+    border: 1px solid #dce2ea;
+    border-radius: 8px;
+    font-size: 15px;
+    min-width: 0;
+}
+
+/* ボタン */
+button {
+    background-color: #26354d;
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+button:hover {
+    background-color: #3c5273;
+}
+
+/* 見出し */
+h2 {
+    font-size: 18px;
+    margin-top: 0;
+}
+
+/* 進捗バー */
+.progress-bar {
+    height: 10px;
+    background-color: #e8edf2;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#progressFill {
+    height: 100%;
+    width: 0%;
+    background-color: #36a477;
+    transition: width 0.3s;
+}
+
+/* 進捗テキスト */
+#progressText {
+    color: #718096;
+    font-size: 14px;
+}
+
+/* タスクリスト */
+ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 0;
+}
+
+li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid #edf0f4;
+}
+
+li:last-child {
+    border-bottom: none;
+}
+
+/* タスク名 */
+.task-name {
+    flex: 1;
+    overflow-wrap: anywhere;
+}
+
+/* 完了したタスク */
+.completed {
+    text-decoration: line-through;
+    color: #a0aab8;
+}
+
+/* 削除ボタン */
+.delete-button {
+    background-color: #fff0f0;
+    color: #d9534f;
+    padding: 7px 12px;
+    font-size: 13px;
+}
+
+.delete-button:hover {
+    background-color: #ffe0e0;
+}
+
+/* 絞り込みボタン */
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* 各ボタン */
+.filter-button {
+    background-color: #e9edf3;
+    color: #333;
+    padding: 8px 16px;
+}
+
+/* 選択中のボタン */
+.filter-button.active {
+    background-color: #243b64;
+    color: white;
+}
+
+
+/* 期限入力欄 */
+#taskDeadline {
+    padding: 10px;
+    border: 1px solid #d9dee7;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #333;
+    background-color: white;
+}
+
+/* 期限の表示 */
+.task-deadline {
+    font-size: 12px;
+    color: #777;
+    margin-left: 8px;
+}
+
+/* 期限超過 */
+.deadline-overdue {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* 今日が期限 */
+.deadline-today {
+    color: #d97706;
+    font-weight: bold;
+}
+
+/* 期限に余裕がある */
+.deadline-future {
+    color: #198754;
+}
+
+
+/* =========================
+   スマートフォン対応
+========================= */
+
+@media screen and (max-width: 600px) {
+
+    /* ページ全体 */
+    body {
+        padding: 20px 12px;
+    }
+
+    /* メインコンテナ */
+    .container {
+        width: 100%;
+    }
+
+    /* ヘッダー */
+    header {
+        margin-bottom: 24px;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+
+    header p {
+        font-size: 14px;
+    }
+
+    /* 各セクション */
+    main section {
+        padding: 18px 14px;
+        border-radius: 10px;
+        margin-bottom: 16px;
+    }
+
+    /* タスク入力欄 */
+    .task-input {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .task-input input {
+        box-sizing: border-box;
+        width: 100%;
+        min-height: 46px;
+    }
+
+    .task-input button {
+        width: 100%;
+        min-height: 46px;
+    }
+
+    /* 絞り込みボタン */
+    .filter-buttons {
+        gap: 6px;
+    }
+
+    .filter-button {
+        flex: 1;
+        padding: 10px 4px;
+        font-size: 13px;
+    }
+
+    /* タスク一覧 */
+    li {
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 16px 0;
+    }
+
+    /* タスク名 */
+    .task-name {
+        min-width: 0;
+    }
+
+    /* 期限 */
+    .task-deadline {
+        width: 100%;
+        margin-left: 28px;
+        font-size: 12px;
+    }
+
+    /* 削除ボタン */
+    .delete-button {
+        padding: 8px 12px;
+    }
+
+}
