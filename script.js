@@ -1,5 +1,8 @@
 
+// =========================
 // HTMLの要素を取得する
+// =========================
+
 const taskInput = document.getElementById("taskInput");
 const taskDeadline = document.getElementById("taskDeadline");
 const addButton = document.getElementById("addButton");
@@ -7,48 +10,121 @@ const taskList = document.getElementById("taskList");
 const progressText = document.getElementById("progressText");
 const progressFill = document.getElementById("progressFill");
 
-// 絞り込みボタンを取得する
 const filterButtons = document.querySelectorAll(".filter-button");
 
+// =========================
 // 現在の絞り込み条件
+// =========================
+
 let currentFilter = "all";
 
+// =========================
 // 保存されているタスクを読み込む
-let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+// =========================
 
+let tasks = [];
 
-// タスクを画面に表示する関数
+try {
+    const savedTasks = JSON.parse(localStorage.getItem("tasks"));
+
+    if (Array.isArray(savedTasks)) {
+        tasks = savedTasks;
+    }
+} catch (error) {
+    console.error("タスクの読み込みに失敗しました:", error);
+}
+
+// 古いデータにも対応する
+tasks = tasks.map(function(task) {
+    return {
+        name: task.name || "",
+        completed: Boolean(task.completed),
+        deadline: task.deadline || ""
+    };
+});
+
+// =========================
+// 今日の日付を取得する
+// =========================
+
+function getToday() {
+    const today = new Date();
+
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+
+    return year + "-" + month + "-" + day;
+}
+
+// =========================
+// 日付を見やすい形式に変換する
+// =========================
+
+function formatDate(dateString) {
+    const parts = dateString.split("-");
+
+    return parts[0] + "年" +
+        Number(parts[1]) + "月" +
+        Number(parts[2]) + "日";
+}
+
+// =========================
+// タスクを保存する
+// =========================
+
+function saveTasks() {
+    try {
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+    } catch (error) {
+        console.error("タスクの保存に失敗しました:", error);
+        alert("タスクを保存できませんでした。");
+    }
+}
+
+// =========================
+// タスクを画面に表示する
+// =========================
+
 function displayTasks() {
 
-    // リストを一度空にする
     taskList.innerHTML = "";
 
-    // 現在の絞り込み条件に合うタスクだけを取得
-    const filteredTasks = tasks.filter(function(task) {
+    // 絞り込み
+    const filteredTasks = tasks
+        .map(function(task, index) {
+            return {
+                task: task,
+                index: index
+            };
+        })
+        .filter(function(item) {
 
-        if (currentFilter === "active") {
-            return !task.completed;
-        }
+            if (currentFilter === "active") {
+                return !item.task.completed;
+            }
 
-        if (currentFilter === "completed") {
-            return task.completed;
-        }
+            if (currentFilter === "completed") {
+                return item.task.completed;
+            }
 
-        return true;
-    });
+            return true;
+        });
 
-    // 絞り込んだタスクを画面に表示する
-    filteredTasks.forEach(function(task) {
+    // タスクを一つずつ表示
+    filteredTasks.forEach(function(item) {
 
-        // 元の配列での位置を取得
-        const index = tasks.indexOf(task);
+        const task = item.task;
+        const index = item.index;
 
         const li = document.createElement("li");
 
         // チェックボックス
         const checkbox = document.createElement("input");
+
         checkbox.type = "checkbox";
         checkbox.checked = task.completed;
+        checkbox.setAttribute("aria-label", task.name + "を完了にする");
 
         checkbox.addEventListener("change", function() {
             task.completed = checkbox.checked;
@@ -57,6 +133,7 @@ function displayTasks() {
 
         // タスク名
         const span = document.createElement("span");
+
         span.textContent = task.name;
         span.className = "task-name";
 
@@ -64,140 +141,126 @@ function displayTasks() {
             span.classList.add("completed");
         }
 
-        // 期限を表示
-        const deadlineSpan = document.createElement("span");
-        deadlineSpan.className = "task-deadline";
+        li.appendChild(checkbox);
+        li.appendChild(span);
 
+        // 期限表示
         if (task.deadline) {
 
-            const deadlineDate = new Date(
-                task.deadline + "T00:00:00"
-            );
+            const deadlineSpan = document.createElement("span");
 
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            const deadlineText =
-                task.deadline.replace(/-/g, "/");
+            deadlineSpan.className = "task-deadline";
 
             deadlineSpan.textContent =
-                "期限：" + deadlineText;
+                "期限：" + formatDate(task.deadline);
 
-            // 完了済みの場合は期限の警告を出さない
             if (!task.completed) {
 
-                if (deadlineDate < today) {
-                    deadlineSpan.textContent += "（期限超過）";
-                    deadlineSpan.classList.add("deadline-overdue");
+                const today = getToday();
 
-                } else if (deadlineDate.getTime() === today.getTime()) {
-                    deadlineSpan.textContent += "（今日が期限）";
+                if (task.deadline < today) {
+
+                    deadlineSpan.classList.add("deadline-overdue");
+                    deadlineSpan.textContent += "（期限超過）";
+
+                } else if (task.deadline === today) {
+
                     deadlineSpan.classList.add("deadline-today");
+                    deadlineSpan.textContent += "（今日が期限）";
 
                 } else {
+
                     deadlineSpan.classList.add("deadline-future");
+
                 }
             }
 
-        } else {
-            deadlineSpan.textContent = "期限なし";
+            li.appendChild(deadlineSpan);
         }
 
         // 削除ボタン
         const deleteButton = document.createElement("button");
+
         deleteButton.textContent = "削除";
         deleteButton.className = "delete-button";
+        deleteButton.type = "button";
 
         deleteButton.addEventListener("click", function() {
             tasks.splice(index, 1);
             displayTasks();
         });
 
-        // 要素を追加
-        li.appendChild(checkbox);
-        li.appendChild(span);
-        li.appendChild(deadlineSpan);
         li.appendChild(deleteButton);
 
         taskList.appendChild(li);
     });
 
-    // 進捗を更新
     updateProgress();
-
-    // タスクを保存
     saveTasks();
 }
 
+// =========================
+// タスクを追加する
+// =========================
 
-// タスクを保存する関数
-function saveTasks() {
-
-    localStorage.setItem(
-        "tasks",
-        JSON.stringify(tasks)
-    );
-}
-
-
-// タスクを追加する関数
 function addTask() {
 
-    // 入力された文字を取得する
     const taskName = taskInput.value.trim();
 
-    // 空欄なら登録しない
     if (taskName === "") {
         alert("タスクを入力してください。");
+        taskInput.focus();
         return;
     }
 
-    // 新しいタスクを追加する
+    const deadline = taskDeadline.value;
+
     tasks.push({
         name: taskName,
         completed: false,
-        deadline: taskDeadline.value
+        deadline: deadline
     });
 
-    // 入力欄を空にする
     taskInput.value = "";
     taskDeadline.value = "";
 
-    // 画面を更新する
     displayTasks();
+
+    taskInput.focus();
 }
 
+// =========================
+// 進捗を更新する
+// =========================
 
-// 進捗を計算する関数
 function updateProgress() {
 
-    // タスクの総数
     const total = tasks.length;
 
-    // 完了したタスクの数
     const completed = tasks.filter(function(task) {
         return task.completed;
     }).length;
 
-    // 進捗率を計算する
     const percentage = total === 0
         ? 0
         : (completed / total) * 100;
 
-    // 進捗の文字を更新する
     progressText.textContent =
         completed + " / " + total + " 完了";
 
-    // 進捗バーの長さを更新する
     progressFill.style.width = percentage + "%";
 }
 
+// =========================
+// 追加ボタン
+// =========================
 
-// 追加ボタンを押したときの処理
 addButton.addEventListener("click", addTask);
 
+// =========================
+// Enterキー
+// =========================
 
-// Enterキーを押したときもタスクを追加する
 taskInput.addEventListener("keydown", function(event) {
 
     if (event.key === "Enter") {
@@ -206,35 +269,37 @@ taskInput.addEventListener("keydown", function(event) {
 
 });
 
+// =========================
+// 絞り込みボタン
+// =========================
 
-// 絞り込みボタンをクリックしたときの処理
 filterButtons.forEach(function(button) {
 
     button.addEventListener("click", function() {
 
-        // 押されたボタンの絞り込み条件を取得
         currentFilter = button.dataset.filter;
 
-        // 選択中のボタンの見た目を更新
         filterButtons.forEach(function(btn) {
             btn.classList.remove("active");
         });
 
         button.classList.add("active");
 
-        // タスク一覧を更新
         displayTasks();
-
     });
 
 });
 
+// =========================
+// 最初の画面表示
+// =========================
 
-// 最初に保存済みのタスクを画面に表示する
 displayTasks();
 
+// =========================
+// Service Workerの登録
+// =========================
 
-// Service Workerを登録する
 if ("serviceWorker" in navigator) {
 
     window.addEventListener("load", function() {
